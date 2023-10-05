@@ -1,2 +1,2 @@
 # Problem_Solving
-Study Algorithms with programmers
+Studying algorithms through Baekjun and Programmers.
