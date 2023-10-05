@@ -1,2 +1,2 @@
 # Problem_Solving
-Study Algorithms with Python
+Study Algorithms with programmers
