@@ -34,7 +34,7 @@ public class Main {
         }
 
         for (int i = 0; i < N; i++) {
-            DFS(i, 1);
+            DFS(i, 0);
 
             if(check) {
                 break;
@@ -51,7 +51,7 @@ public class Main {
     }
 
     private static void DFS(int v, int depth) {
-        if (depth == 5) {
+        if (depth == 4) {
             check = true;
             return;
         }
