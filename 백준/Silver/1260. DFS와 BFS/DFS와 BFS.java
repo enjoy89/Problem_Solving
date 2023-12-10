@@ -1,64 +1,72 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
-    static int[][] graph;
-    static boolean[] visited;
+    static ArrayList<Integer>[] A;
+    static boolean visited[];
 
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader((System.in)));
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
         int N = Integer.parseInt(st.nextToken());
         int M = Integer.parseInt(st.nextToken());
-        int V = Integer.parseInt(st.nextToken());
+        int startNode = Integer.parseInt(st.nextToken());
 
-        graph = new int[N + 1][N + 1];
+        A = new ArrayList[N + 1];
         visited = new boolean[N + 1];
 
-        for (int i = 0; i < M; i++) {
-            st = new StringTokenizer(br.readLine());
-            int from = Integer.parseInt(st.nextToken());
-            int to = Integer.parseInt(st.nextToken());
-
-            graph[from][to] = 1;
-            graph[to][from] = 1;
+        for (int i = 1; i < N + 1; i++) {
+            A[i] = new ArrayList<>();
         }
 
-        dfs(V);
-        Arrays.fill(visited, false);
+        for (int i = 0; i < M; i++) {
+            String[] str = br.readLine().split(" ");
+            int start = Integer.parseInt(str[0]);
+            int end = Integer.parseInt(str[1]);
+
+            A[start].add(end);
+            A[end].add(start);
+        }
+
+        for (int i = 1; i < N + 1; i++) {
+            Collections.sort(A[i]);
+        }
+
+        DFS(startNode);
         System.out.println();
-        bfs(V);
-        br.close();
+        visited = new boolean[N + 1];
+        BFS(startNode);
     }
 
-    static void dfs(int node) {
-        visited[node] = true;
-        System.out.print(node + " ");
+    private static void DFS(int startNode) {
+        visited[startNode] = true;
+        System.out.print(startNode + " ");
 
-        for (int i = 1; i < graph.length; i++) {
-            if (graph[node][i] == 1 && !visited[i]) {
-                dfs(i);
+        for (int i : A[startNode]) {
+            if (!visited[i]) {
+                DFS(i);
             }
         }
     }
 
-    static void bfs(int node) {
+    private static void BFS(int startNode) {
         Queue<Integer> queue = new LinkedList<>();
-        visited[node] = true;
-        queue.add(node);
+        queue.add(startNode);
+        visited[startNode] = true;
 
         while (!queue.isEmpty()) {
-            int curr = queue.remove();
-            System.out.print(curr + " ");
+            int currNode = queue.poll();
+            System.out.print(currNode + " ");
 
-            for (int i = 1; i < graph.length; i++) {
-                if (!visited[i] && graph[curr][i] == 1) {
+            for (int i : A[currNode]) {
+                if (!visited[i]) {
                     visited[i] = true;
                     queue.add(i);
                 }
