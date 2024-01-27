@@ -9,7 +9,7 @@ public class Main {
     static int[][] arr;
     static int dx[] = {-1, 1, 0, 0};    // 좌,우 범위를 판단
     static int dy[] = {0, 0, -1, 1};    // 상,하 범위를 판단
-    static int M, N, count, num;
+    static int M, N, size;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -35,39 +35,38 @@ public class Main {
                     arr[y][x] = 1;
                 }
             }
-
         }
 
-        count = 0;
-        for(int i=0; i<M; i++) {
-            for(int j=0; j<N; j++) {
-                if(arr[i][j] == 0) {
+        int count = 0;
+        for (int i = 0; i < M; i++) {
+            for (int j = 0; j < N; j++) {
+                if (arr[i][j] == 0) {
                     count++;
-                    num = 0; // 영역의 넓이
+                    size = 0; // 영역의 넓이
                     dfs(i, j);
-                    area.add(num);
+                    area.add(size);
                 }
             }
         }
 
         Collections.sort(area);
-        System.out.println(count);
+        sb.append(count).append("\n");
 
-        for(int i=0; i<area.size(); i++){
-            System.out.print(area.get(i) + " ");
+        for (int i : area) {
+            sb.append(i).append(" ");
         }
-
+        System.out.println(sb);
     }
 
     public static void dfs(int x, int y) {
         arr[x][y] = 1;
-        num++;
+        size++;
 
-        for(int i=0; i<4; i++) {
+        for (int i = 0; i < 4; i++) {
             int nx = x + dx[i];
             int ny = y + dy[i];
 
-            if(checkArr(nx, ny) && arr[nx][ny] == 0) {
+            if (checkArr(nx, ny) && arr[nx][ny] == 0) {
                 dfs(nx, ny);
             }
         }
