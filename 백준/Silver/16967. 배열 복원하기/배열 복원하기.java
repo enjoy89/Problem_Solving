@@ -50,11 +50,6 @@ public class Main {
                 if (isContains_area1(i, j) && !isContains_area2(i, j)) {
                     A[i][j] = num;
                 }
-
-                if (!isContains_area1(i, j) && !isContains_area2(i, j)) {
-                    A[i - X][j - Y] = num;
-                }
-
             }
         }
 
