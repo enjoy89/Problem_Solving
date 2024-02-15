@@ -1,5 +1,8 @@
 import java.io.*;
 
+/**
+ * 2024-02-15
+ */
 public class N0111_문자열_압축 {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
