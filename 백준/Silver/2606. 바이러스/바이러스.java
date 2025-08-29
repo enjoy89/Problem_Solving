@@ -1,46 +1,40 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Main {
-    static ArrayList<Integer>[] list;
-    static boolean visited[];
+    static boolean[] visited;
+    static List<List<Integer>> graph = new ArrayList<>();
     static int count = 0;
-    
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int N = Integer.parseInt(br.readLine());
         int M = Integer.parseInt(br.readLine());
-        
-        list = new ArrayList[N+1];
         visited = new boolean[N+1];
-        
-        for(int i=0; i<list.length; i++) {
-            list[i] = new ArrayList<>();
+        for(int i=0; i<N+1; i++) {
+            graph.add(new ArrayList<>());
         }
-        
-        for(int i=1; i<=M; i++) {
+
+        for(int i=0; i<M; i++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
-            int start = Integer.parseInt(st.nextToken());
-            int end = Integer.parseInt(st.nextToken());
-            
-            list[start].add(end);
-            list[end].add(start);
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+            graph.get(a).add(b);
+            graph.get(b).add(a); // 무방향 그래프이므로 양쪽에 추가
         }
-        dfs(1);
+
+        dfs(1); // 1번부터 시작
         System.out.println(count-1);
-        
+
     }
-    
+
     public static void dfs(int node) {
         visited[node] = true;
         count++;
-        
-        for(int i : list[node]) {
-            if(!visited[i]) {
-                dfs(i);
+
+        for(int next: graph.get(node)) {
+            if(!visited[next]) {
+                dfs(next);
             }
         }
     }
