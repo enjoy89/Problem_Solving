@@ -2,8 +2,8 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    static int[] time;
     static int[] count;
+    static int[] time;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -14,37 +14,35 @@ public class Main {
         bfs(N);
         System.out.println(time[K]);
         System.out.println(count[K]);
-
     }
 
+    // 최소 시간으로 가는 방법의 수
+    // 최소 시간
     public static void bfs(int start) {
         Queue<Integer> queue = new LinkedList<>();
-        time = new int[100001];
         count = new int[100001];
+        time = new int[100001];
 
         Arrays.fill(time, -1);
         time[start] = 0;
         count[start] = 1;
-
         queue.offer(start);
 
         while(!queue.isEmpty()) {
             int cur = queue.poll();
-
-            for(int next : new int[]{cur-1, cur+1, cur*2}) {
-                if(next >= 0 && next <= 100000) {
-                    // 처음 방문
+            for(int next : new int[] {cur-1, cur+1, cur*2}) {
+                if(next >= 0 && next <=100000) {
+                    // 처음 방문하는 경우
                     if(time[next] == -1) {
                         time[next] = time[cur] + 1;
-                        count[next] = count[cur]; // 방법 개수 그대로 복사
+                        count[next] = count[cur];
                         queue.offer(next);
-                    }
-                    // 이미 방문했지만 같은 시간에 도달
-                    else if(time[next] == time[cur] + 1) {
+                    } else if(time[next] == time[cur] + 1) {
                         count[next] += count[cur];
                     }
                 }
             }
         }
+
     }
 }
