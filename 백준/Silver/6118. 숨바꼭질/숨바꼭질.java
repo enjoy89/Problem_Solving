@@ -10,7 +10,7 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken()); // 헛간의 개수
-        int M = Integer.parseInt(st.nextToken()); // 길의 개수
+        int M = Integer.parseInt(st.nextToken());
 
         map = new ArrayList<>();
         for(int i=0; i<N+1; i++) {
@@ -26,17 +26,15 @@ public class Main {
         }
         bfs(1);
 
-        int max = Arrays.stream(distance).max().getAsInt(); // 거리의 최대값
+        int max = 0;
         int index = 0;
-        for(int i=0; i<N+1; i++) {
-            if(max == distance[i]) {
-                index = i;
-                break;
-            }
-        }
         int count = 0;
         for(int i=0; i<N+1; i++) {
-            if(max == distance[i]) {
+            if(max < distance[i]) {
+                max = distance[i];
+                index = i;
+                count = 1;
+            } else if(max == distance[i]) {
                 count++;
             }
         }
