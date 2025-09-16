@@ -6,28 +6,15 @@ public class Main {
         int N = Integer.parseInt(br.readLine());
 
         int result = 0;
-        while (N > 0) {
-            if (N >= 5) {
-                if (N % 5 == 0) {
-                    result += N / 5;
-                    N %= 5;
-                } else if(N % 3 != 0) {
-                    N -= 5;
-                    result++;
-                } else {
-                    N -= 3;
-                    result++;
-                }
-            } else {
-                if(N >= 3) {
-                    N -= 3;
-                    result++;
-                } else {
-                    System.out.println(-1);
-                    return;
-                }
+        while (N >= 0) {
+            if(N % 5 == 0) {
+                result += N / 5;
+                System.out.println(result);
+                return;
             }
+            N -= 3;
+            result++;
         }
-        System.out.println(result);
+        System.out.println(-1);
     }
 }
