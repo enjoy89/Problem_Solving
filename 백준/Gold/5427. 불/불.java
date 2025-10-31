@@ -2,108 +2,108 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    static char[][] map;
     static int w, h;
-    static int[][] fireTime;
-    static int[][] personTime;
+    static char[][] map;
     static int[] dy = {-1, 1, 0, 0};
     static int[] dx = {0, 0, -1, 1};
-
-    static Queue<int[]> fireQueue;
-    static Queue<int[]> personQueue;
+    static Queue<int[]> queue_fire;
+    static Queue<int[]> queue_person;
+    static int[][] time_fire;
+    static int[][] time_person;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int T = Integer.parseInt(br.readLine()); // 테스트 케이스
+        int T = Integer.parseInt(br.readLine());
 
-        for(int t = 0; t <T; t++) {
+        for(int t=0; t<T; t++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
             w = Integer.parseInt(st.nextToken()); // 가로
             h = Integer.parseInt(st.nextToken()); // 세로
-
             map = new char[h][w];
-            fireTime = new int[h][w];
-            personTime = new int[h][w];
-            fireQueue = new LinkedList<>();
-            personQueue = new LinkedList<>();
+
+            queue_fire = new LinkedList<>();
+            queue_person = new LinkedList<>();
+            time_fire = new int[h][w];
+            time_person = new int[h][w];
 
             for(int i=0; i<h; i++) {
-                String[] str = br.readLine().split("");
-                for(int j=0; j<str.length; j++) {
-                    map[i][j] = str[j].charAt(0);
-                    fireTime[i][j] = -1; // 초기화
-                    personTime[i][j] = -1; // 초기화
+                String line = br.readLine();
+                for(int j=0; j<w; j++) {
+                    map[i][j] = line.charAt(j);
+                    time_fire[i][j] = -1;
+                    time_person[i][j] = -1;
                 }
             }
 
-            for(int y=0; y<h; y++) {
-                for(int x=0; x<w; x++) {
-                    if(map[y][x] == '*') {
-                        fireQueue.offer(new int[]{y, x});
-                        fireTime[y][x] = 0;
-                    } else if(map[y][x] == '@') {
-                        personQueue.offer(new int[]{y, x});
-                        personTime[y][x] = 0;
+            for(int i=0; i<h; i++) {
+                for(int j=0; j<w; j++) {
+                    if(map[i][j] == '*') {
+                        time_fire[i][j] = 0;
+                        queue_fire.offer(new int[]{i, j});
+                    } else if(map[i][j] == '@') {
+                        time_person[i][j] = 0;
+                        queue_person.offer(new int[]{i, j});
                     }
                 }
             }
-
-            bfsFire();
-            int result = bfsPerson();
-            System.out.println(result == -1 ? "IMPOSSIBLE" : result);
-        }
-
-    }
-
-    public static int bfsPerson() {
-        while(!personQueue.isEmpty()) {
-            int[] cur = personQueue.poll();
-            int cy = cur[0];
-            int cx = cur[1];
-
-            for(int i=0; i<4; i++) {
-                int ny = dy[i] + cy;
-                int nx = dx[i] + cx;
-
-                // 탈출 성공
-                if(ny < 0 || ny >= h || nx < 0 || nx >= w) {
-                    return personTime[cy][cx] + 1;
-                }
-
-                // 벽이거나 이미 왔던 곳은 이동 불가
-                if(map[ny][nx] == '#' || personTime[ny][nx] != -1) {
-                    continue; // 건너뜀
-                }
-
-                // 불이 이미 와있거나 동시에 도착한다면 이동 불가
-                if(fireTime[ny][nx] != -1 && fireTime[ny][nx] <= personTime[cy][cx]+1) {
-                    continue; // 건너뜀
-                }
-
-                // 이동 가능
-                personTime[ny][nx] =  personTime[cy][cx] + 1;
-                personQueue.offer(new int[]{ny, nx});
+            bfs_fire();
+            int answer = bfs_person();
+            if(answer == -1) {
+                System.out.println("IMPOSSIBLE");
+            } else {
+                System.out.println(answer);
             }
         }
-
-        return -1; // 탈출 실패
     }
 
-    public static void bfsFire() {
-        while(!fireQueue.isEmpty()) {
-            int[] cur = fireQueue.poll();
+    public static void bfs_fire() {
+        while(!queue_fire.isEmpty()) {
+            int[] cur = queue_fire.poll();
             int cy = cur[0];
             int cx = cur[1];
+
             for(int i=0; i<4; i++) {
-                int ny = dy[i] + cy;
-                int nx = dx[i] + cx;
+                int ny = cy + dy[i];
+                int nx = cx + dx[i];
                 if(ny >= 0 && ny < h && nx >= 0 && nx < w) {
-                    if(map[ny][nx] == '.' && fireTime[ny][nx] == -1) {
-                        fireTime[ny][nx] = fireTime[cy][cx] + 1;
-                        fireQueue.offer(new int[]{ny, nx});
+                    if(map[ny][nx] == '.' && time_fire[ny][nx] == -1) {
+                        time_fire[ny][nx] = time_fire[cy][cx] + 1;
+                        queue_fire.offer(new int[]{ny, nx});
                     }
                 }
             }
+
         }
+    }
+
+    public static int bfs_person() {
+        while(!queue_person.isEmpty()) {
+            int[] cur = queue_person.poll();
+            int cy = cur[0];
+            int cx = cur[1];
+
+            for(int i=0; i<4; i++) {
+                int ny = cy + dy[i];
+                int nx = cx + dx[i];
+
+                if(ny < 0 || ny >= h || nx < 0 || nx >= w) {
+                    return time_person[cy][cx] + 1;
+                }
+
+                // 벽이거나 이미 이동한 곳이면 이동 불가
+                if(map[ny][nx] == '#' || time_person[ny][nx] != -1) {
+                    continue;
+                }
+                // 불이 사람보다 먼저 번진 곳은 이동 불가
+                if(time_fire[ny][nx] != -1 && time_fire[ny][nx] <= time_person[cy][cx] + 1) {
+                    continue;
+                }
+                if (map[ny][nx] == '.') {
+                    time_person[ny][nx] = time_person[cy][cx] + 1;
+                    queue_person.offer(new int[]{ny, nx});
+                }
+            }
+        }
+        return -1;
     }
 }
