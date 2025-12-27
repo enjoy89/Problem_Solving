@@ -43,9 +43,9 @@ public class Main {
 	}
 
 	public static void dfs(int count, int pointer) {
-		if (pointer > 15000) {
-			return;
-		}
+		//if (pointer > 15000) {
+		//	return;
+		//}
 
 		if (visited[count][pointer]) {
 			return;
