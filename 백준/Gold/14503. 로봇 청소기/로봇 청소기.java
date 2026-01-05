@@ -1,15 +1,6 @@
 import java.io.*;
 import java.util.*;
 
-/**
- * 260105 / 백준 14593 로봇 청소기 / 골드 5
- * 1. 현재 칸이 청소되어 있지 않으면, 현재 칸을 청소한다.
- * 2. 현재 칸의 주변 4칸 중, 청소되지 않은 빈 칸이 있는 경우
- * 2-1. 반시계 방향으로 90도 회전하며, 바라보는 방향의 앞쪽 칸이 청소되어 있지 않은 빈 칸인 경우 한 칸 전진한다.
- * 3. 현재 칸의 주변 4칸 중, 청소되지 않은 빈 칸이 없는 경우
- * 3-1. 바라보는 방향의 뒤쪽 칸이 벽이면 작동을 멈춘다.
- * 3-2. 바라보는 방향으로 후진이 가능하면 후진한다.
- */
 public class Main {
 
     // 북,동,남,서
@@ -54,13 +45,13 @@ public class Main {
                 // 반시계 방향으로 회전
                 d = (d + 3) % 4;
 
-                int nx = r + dx[d];
-                int ny = c + dy[d];
+                int nr = r + dx[d];
+                int nc = c + dy[d];
 
                 // 2-1. 빈 칸이 있으면 한 칸 전진한다.
-                if (isRange(nx, ny) && board[nx][ny] == 0) {
-                    r = nx;
-                    c = ny;
+                if (isRange(nr, nc) && board[nr][nc] == 0) {
+                    r = nr;
+                    c = nc;
                     moved = true;
                     break;
                 }
@@ -72,17 +63,17 @@ public class Main {
 
             // 3. 빈 칸이 없는 경우
             int[] b = back(r, c, d);
-            int bx = b[0];
-            int by = b[1];
+            int backR = b[0];
+            int backC = b[1];
 
             // 3-1. 뒤쪽이 벽이면 작동을 멈춘다.
-            if (!isRange(bx, by) || board[bx][by] == 1) {
+            if (!isRange(backR, backC) || board[backR][backC] == 1) {
                 break;
             }
             // 3-2.후진이 가능하면 후진한다.
             else {
-                r = bx;
-                c = by;
+                r = backR;
+                c = backC;
             }
         }
 
@@ -91,17 +82,14 @@ public class Main {
     }
 
     // 뒤로 한 칸 후진
-    public static int[] back(int x, int y, int d) {
+    public static int[] back(int r, int c, int d) {
         int backDir = (d + 2) % 4;
-        int nx = x + dx[backDir];
-        int ny = y + dy[backDir];
-
-        return new int[] { nx, ny };
+        return new int[] { r + dx[backDir], c + dy[backDir] };
 
     }
 
-    public static boolean isRange(int x, int y) {
-        return x >= 0 && x < N && y >= 0 && y < M;
+    public static boolean isRange(int r, int c) {
+        return r >= 0 && r < N && c >= 0 && c < M;
     }
 
 }
