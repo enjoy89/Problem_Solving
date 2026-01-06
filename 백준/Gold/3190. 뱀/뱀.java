@@ -55,16 +55,16 @@ public class Main {
                 break;
             }
 
+            // 머리 이동
             snake.addFirst(new int[] { nx, ny });
+            visited[nx][ny] = true; // 방문 표시
 
             // 사과가 있다면, 꼬리 유지
             if (board[nx][ny] == 1) {
-                visited[nx][ny] = true;
                 board[nx][ny] = 0; // 사과 제거
             }
             // 사과가 없다면, 꼬리 제거
             else {
-                visited[nx][ny] = true;
                 int[] tail = snake.pollLast();
                 visited[tail[0]][tail[1]] = false;
             }
